@@ -1,4 +1,6 @@
 -- creating a copy of raw data to work on --
+
+
 drop table if exists retail_sales_staging; -- drop existing table if retail_sales_staging exist
 create table retail_sales_staging
 like retail_sales; -- create retail_sales worksheet table (copy column name only)
@@ -10,7 +12,12 @@ from retail_sales; -- copy row values from layoffs table to layoffs_staging tabl
 select *
 from retail_sales_staging; -- check if data is updated 
 
+
+
+
 -- Removing Duplicate Rows --
+
+
 CREATE TABLE `retail_sales_staging2` (
   `Store ID` text,
   `Product ID` int DEFAULT NULL,
@@ -43,7 +50,11 @@ delete
 from retail_sales_staging2
 where row_num > 1; -- deleting duplicate rows from the table (if exist)
 
+
+
+
 -- Standardazing data --
+
 
 select distinct `Product ID`
 from retail_sales_staging2;
@@ -51,20 +62,24 @@ from retail_sales_staging2;
 update retail_sales_staging2
 set `Store ID` = trim(`Store ID`),
 `Day of the Week` = trim(`Day of the Week`),
-`Product Category` = trim(`Product Category`);
+`Store Location` = trim(`Store Location`);
 
 select `Date`, str_to_date(`Date`, '%Y,%m,%d')
 from retail_sales_staging2; -- check if Date is ni date arrangement
--- Date is in date arrangement, thus need to update the column
+-- Date is in date arrangement, thus no need to update the column
 
 -- if Date is not in date arrangement, update using this code--
 update retail_sales_staging2 
 set `Date` = str_to_date(`Date`, '%Y,%m,%d');
 
 alter table retail_sales_staging2
-modify column `Date` date;
+modify column `Date` date; -- set Date to date category
+
+
+
 
 -- checking NULL value/Blank VALUES --
+
 
 select t1.`Product ID`, t1.`Product Category`, t2.`Product Category`
 from retail_sales_staging2 t1
@@ -82,7 +97,12 @@ set t1.`Product Category` = t2.`Product Category`
 where (t1.`Product Category` is NULL or  t1.`Product Category` = '')
 and (t2.`Product Category` is NOT NULL and  t1.`Product Category` != '');
 
+
+
+
+
 -- Removing unimportant data --
+
 
 select *
 from retail_sales_staging2
@@ -98,4 +118,7 @@ and (`Marketing Spend (USD)` is NULL or `Marketing Spend (USD)` = ''); -- delete
 
 alter table retail_sales_staging2
 drop column row_num; -- removing unimportant column
+
+select *
+from retail_sales_staging2;
 
