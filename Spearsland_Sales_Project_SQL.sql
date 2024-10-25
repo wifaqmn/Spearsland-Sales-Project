@@ -1,5 +1,9 @@
--- creating a copy of raw data to work on --
 
+-- Data Cleaning--
+
+
+
+-- Creating a Copy of Raw Data as Worksheet--
 
 drop table if exists retail_sales_staging; -- drop existing table if retail_sales_staging exist
 create table retail_sales_staging
@@ -15,8 +19,8 @@ from retail_sales_staging; -- check if data is updated
 
 
 
--- Removing Duplicate Rows --
 
+-- Removing Duplicate Rows --
 
 CREATE TABLE `retail_sales_staging2` (
   `Store ID` text,
@@ -53,8 +57,8 @@ where row_num > 1; -- deleting duplicate rows from the table (if exist)
 
 
 
--- Standardazing data --
 
+-- Standardazing Data --
 
 select distinct `Product ID`
 from retail_sales_staging2;
@@ -78,8 +82,8 @@ modify column `Date` date; -- set Date to date category
 
 
 
--- checking NULL value/Blank VALUES --
 
+-- checking NULL value/Blank VALUES --
 
 select t1.`Product ID`, t1.`Product Category`, t2.`Product Category`
 from retail_sales_staging2 t1
@@ -101,8 +105,7 @@ and (t2.`Product Category` is NOT NULL and  t1.`Product Category` != '');
 
 
 
--- Removing unimportant data --
-
+-- Removing Non-usable Data --
 
 select *
 from retail_sales_staging2
@@ -117,8 +120,8 @@ and (`Discount Percentage` is NULL or `Discount Percentage` = '')
 and (`Marketing Spend (USD)` is NULL or `Marketing Spend (USD)` = ''); -- delete null/blank data from Sales Revenue (USD) & Discount Percentage & Marketing Spend (USD)
 
 alter table retail_sales_staging2
-drop column row_num; -- removing unimportant column
+drop column row_num; -- removing non-usable column
 
 select *
-from retail_sales_staging2;
+from retail_sales_staging2; -- final check on the data altered
 
