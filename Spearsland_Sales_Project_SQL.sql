@@ -66,7 +66,7 @@ from retail_sales_staging2;
 update retail_sales_staging2
 set `Store ID` = trim(`Store ID`),
 `Day of the Week` = trim(`Day of the Week`),
-`Store Location` = trim(`Store Location`);
+`Store Location` = trim(`Store Location`); -- trim data, make sure no spaces except space between strings
 
 select `Date`, str_to_date(`Date`, '%Y,%m,%d')
 from retail_sales_staging2; -- check if Date is ni date arrangement
@@ -83,7 +83,7 @@ modify column `Date` date; -- set Date to date category
 
 
 
--- checking NULL value/Blank VALUES --
+-- Checking NULL Values/Blank Values --
 
 select t1.`Product ID`, t1.`Product Category`, t2.`Product Category`
 from retail_sales_staging2 t1
